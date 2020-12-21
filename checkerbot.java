@@ -14,7 +14,6 @@ public class checkerbot {
         for (int i = 1; i < 8; i+=2){
             board[2][i] = 'W';
         } 
-
         // red pieces
         for (int i = 0; i < 8; i+=2){
             board[5][i] = 'R';
@@ -34,6 +33,9 @@ public class checkerbot {
         String str = s.nextLine();
         String[] splitted = str.split(" ");
         System.out.println(Arrays.toString(splitted));
+
+        
+        s.close();
     }
 
     public void move(int currentPos, int movePos){
