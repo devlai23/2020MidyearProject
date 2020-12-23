@@ -4,6 +4,8 @@ public class checkerbot {
     static char[][] board = new char[8][8];
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
+        int white = 12;
+        int red = 12;
         // white pieces
         for (int i = 1; i < 8; i+=2){
             board[0][i] = 'W';
@@ -36,7 +38,8 @@ public class checkerbot {
         System.out.println(Arrays.toString(splitted));
     }
 
-    public void move(int currentPos, int movePos){
-
+    public void move(int currentPos, int movePos) {
+        // each space has a name
+        
     }
 }
