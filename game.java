@@ -54,18 +54,21 @@ public class game {
     }
 
     public static void move(int currentPos, int movePos){
-        int row = -1; // row is 1 if odd, row is 2 if even
+        int row = -1; // move the selected position (first number) in direction (second number)
         int mod = currentPos % 8;
-        if (mod == 1 || mod == 2 || mod == 3 || mod == 4){
+        if (mod == 1 || mod == 2 || mod == 3 || mod == 4){ // see if the position is in an odd row
             row = 1;
         }
-        else if (mod == 5 || mod == 6 || mod == 7 || mod == 0){
+        else if (mod == 5 || mod == 6 || mod == 7 || mod == 0){ // see if the position is in an even row
             row = 2;
         }
 
-        int[] currentPosConverted = convert(currentPos);
-        char temp = board[currentPosConverted[0]][currentPosConverted[1]];
-        board[currentPosConverted[0]][currentPosConverted[1]] = '\0';
+        int[] currentPosConverted = convert(currentPos);  // this will call convert, which converts currentPos into a...
+        char temp = board[currentPosConverted[0]][currentPosConverted[1]]; // ...coordinate for the original "board" array to access 
+        board[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // this will "delete" the current checker because it's being moved (set it to null)
+        
+        // the following conditional statements check if the row is even or odd, and increment the current position by a different number to have the correct move
+        // later (Tuesday) -- work on exceptions/invalid moves and how to handle them
         if (movePos == 1 && row == 1){
             currentPos -= 4;
         }
