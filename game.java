@@ -41,7 +41,7 @@ public class game {
         System.out.println("Welcome to CheckerBot");
 
         boolean run = true;
-        while (run){
+        while (run){ // question (Grant) -> when do we edit this run boolean to stop the loop when the game is over
             System.out.println();
             score();
             printBoard();
@@ -124,7 +124,7 @@ public class game {
         board[movePosConverted[0]][movePosConverted[1]] = temp;
     }
 
-    public static int[] convert(int currentPos){
+    public static int[] convert(int currentPos){// basically convert a currentPos numerical value into a set of coordinates for the actual board to use to save/move checkers for the game
         int[] ret = new int[2];
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
