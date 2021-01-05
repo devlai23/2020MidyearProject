@@ -12,9 +12,11 @@ public class game {
         {0, 25, 0, 26, 0, 27, 0, 28},
         {29, 0, 30, 0, 31, 0, 32, 0}
     };
+    static Tree<Node> tree;
     
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
+        createTree();
 
         // white pieces
         for (int i = 1; i < 8; i+=2){
@@ -38,13 +40,15 @@ public class game {
         }
         System.out.println("Welcome to CheckerBot");
 
-
-        printBoard();
-        String str = s.nextLine();
-        String[] splitted = str.split(" ");
-        move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
-        printBoard();
-
+        boolean run = true;
+        while (run){
+            System.out.println();
+            score();
+            printBoard();
+            String str = s.nextLine();
+            String[] splitted = str.split(" ");
+            move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
+        }
         
         s.close();
     }
@@ -87,6 +91,33 @@ public class game {
             currentPos += 3;
         }
         int[] movePosConverted = convert(currentPos);
+        
+        char check = ' ';
+        if (temp == 'R'){
+            check = 'W';
+        }
+        else if (temp == 'W'){
+            check = 'R';
+        }
+        if (board[movePosConverted[0]][movePosConverted[1]] == check){
+            board[movePosConverted[0]][movePosConverted[1]] = '\0';
+            if (movePos == 1){
+                movePosConverted[0] -= 1;
+                movePosConverted[1] -= 1;
+            }
+            else if (movePos == 2){
+                movePosConverted[0] -= 1;
+                movePosConverted[1] += 1;
+            }
+            else if (movePos == 3){
+                movePosConverted[0] += 1;
+                movePosConverted[1] += 1;
+            }
+            else if (movePos == 4){
+                movePosConverted[0] += 1;
+                movePosConverted[1] -= 1;
+            }
+        }
         board[movePosConverted[0]][movePosConverted[1]] = temp;
     }
 
@@ -108,5 +139,34 @@ public class game {
         for (int i = 0; i < 8; i++){
             System.out.println(Arrays.toString(board[i]));
         }
+    }
+
+    public static void score(){
+        int red = 0;
+        int white = 0;
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                if (board[i][j] == 'R'){
+                    red++;
+                }
+                else if (board[i][j] == 'W'){
+                    white++;
+                }
+            }
+        }
+        if (red == 0){
+            System.out.println("White Won!");
+        }
+        else if (white == 0){
+            System.out.println("Red Won!");
+        }
+        else{
+            System.out.printf("Red: %d\nWhite: %d\n", red, white);
+        }
+    }
+
+    public static void createTree(){
+        Node root = new Node();
+        tree = new Tree<>(root);
     }
 }
