@@ -54,6 +54,11 @@ public class game {
     }
 
     public static void move(int currentPos, int movePos){
+        if (movePos < 1 || movePos > 4) { // brief error checking to save the running of unnecessary code
+            System.out.println("Invalid Move, must be an integer from 1-4. Move given: " + movePos + ".");
+            System.out.println("Try another move below.");
+            return;
+        }
         int row = -1; // move the selected position (first number) in direction (second number)
         int mod = currentPos % 8;
         if (mod == 1 || mod == 2 || mod == 3 || mod == 4){ // see if the position is in an odd row
@@ -69,6 +74,12 @@ public class game {
         
         // the following conditional statements check if the row is even or odd, and increment the current position by a different number to have the correct move
         // later (Tuesday) -- work on exceptions/invalid moves and how to handle them
+        /**
+         * exceptions: I think one way we could check is,
+         * assuming the user is operating the red checkers,
+         * if the first coordinate of the movePosConverted is not 1 greater than the currentPosConverted, its an invalid move?
+         * ^^ just a guess to help you guys get started with the error checking
+         */
         if (movePos == 1 && row == 1){
             currentPos -= 4;
         }
@@ -94,6 +105,7 @@ public class game {
             currentPos += 3;
         }
         int[] movePosConverted = convert(currentPos);
+        // Errorcheck - System.out.printf("\nMoving to: [%d][%d]\n", movePosConverted[0], movePosConverted[1]);
         
         char check = ' ';
         if (temp == 'R'){
@@ -144,7 +156,9 @@ public class game {
         }
     }
 
-    public static void score(){
+    public static void score(){// maybe we should make red/white into static variables at the top, and make this solely a checkScore method
+        // from there we could increment the red/white count in the last part of the move() function using the check variable 
+        // just seems more efficient than looping through the whole array each time to get the score
         int red = 0;
         int white = 0;
         for (int i = 0; i < 8; i++){
