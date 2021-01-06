@@ -1,0 +1,11 @@
+error check the movement inputs 
+    - check if movement is blocked by your own piece
+    - make sure there is space if jumping
+    - check if at side of board
+
+promote pieces (turning into a king)
+GUI
+Evaluation score GRRRR
+DFS to go through the tree
+Use some algorithm (USACO??) to go through the tree and find optimal move
+Make the bot actually move its piece

@@ -2,6 +2,7 @@ import java.util.*;
 
 public class game {
     static char[][] board = new char[8][8];
+    static boolean[][] king = new boolean[8][8];
     static int[][] ref = {
         {0, 1, 0, 2, 0, 3, 0, 4},
         {5, 0, 6, 0, 7, 0, 8, 0},
@@ -13,10 +14,11 @@ public class game {
         {29, 0, 30, 0, 31, 0, 32, 0}
     };
     static Tree<Node> tree;
+    static boolean run = true;
+    static char turn = 'R'; // red = 'R'; white = 'W'
+    static Scanner s = new Scanner(System.in);
     
     public static void main(String[] args) {
-        Scanner s = new Scanner(System.in);
-        createTree();
 
         // white pieces
         for (int i = 1; i < 8; i+=2){
@@ -40,23 +42,43 @@ public class game {
         }
         System.out.println("Welcome to CheckerBot");
 
-        boolean run = true;
-        while (run){
+        while (run){ // question (Grant) -> when do we edit this run boolean to stop the loop when the game is over
             System.out.println();
             score();
+            printTurn();
             printBoard();
             String str = s.nextLine();
             String[] splitted = str.split(" ");
+            createTree();
             move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
+            if (turn == 'R')
+                turn = 'W';
+            else
+                turn = 'R';
         }
         
         s.close();
     }
 
     public static void move(int currentPos, int movePos){
-        if (check(currentPos, movePos)) {
-
+        if (movePos < 1 || movePos > 4) { // brief error checking to save the running of unnecessary code
+            System.out.println("Invalid Move, must be an integer from 1-4. Move given: " + movePos + ".");
+            System.out.println("Try another move below.");
+            newInput();
+            return;
         }
+
+        if (turn == 'R' && (movePos == 3 || movePos == 4)) {
+            System.out.println("Invalid move, this piece must move forward. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
+        else if (turn == 'W' && (movePos == 1 || movePos == 2)) {
+            System.out.println("Invalid move, this piece must move forward. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
+
         int row = -1; // move the selected position (first number) in direction (second number)
         int mod = currentPos % 8;
         if (mod == 1 || mod == 2 || mod == 3 || mod == 4){ // see if the position is in an odd row
@@ -67,11 +89,24 @@ public class game {
         }
 
         int[] currentPosConverted = convert(currentPos);  // this will call convert, which converts currentPos into a...
+
+        if (!(board[currentPosConverted[0]][currentPosConverted[1]] == turn)) {
+            System.out.println("Invalid Piece, must be " + turn + " piece");
+            System.out.println("Try another move below.");
+            newInput();
+            return;
+        }
         char temp = board[currentPosConverted[0]][currentPosConverted[1]]; // ...coordinate for the original "board" array to access 
         board[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // this will "delete" the current checker because it's being moved (set it to null)
         
         // the following conditional statements check if the row is even or odd, and increment the current position by a different number to have the correct move
         // later (Tuesday) -- work on exceptions/invalid moves and how to handle them
+        /**
+         * exceptions: I think one way we could check is,
+         * assuming the user is operating the red checkers,
+         * if the first coordinate of the movePosConverted is not 1 greater than the currentPosConverted, its an invalid move?
+         * ^^ just a guess to help you guys get started with the error checking
+         */
         if (movePos == 1 && row == 1){
             currentPos -= 4;
         }
@@ -97,6 +132,7 @@ public class game {
             currentPos += 3;
         }
         int[] movePosConverted = convert(currentPos);
+        // Errorcheck - System.out.printf("\nMoving to: [%d][%d]\n", movePosConverted[0], movePosConverted[1]);
         
         char check = ' ';
         if (temp == 'R'){
@@ -127,7 +163,7 @@ public class game {
         board[movePosConverted[0]][movePosConverted[1]] = temp;
     }
 
-    public static int[] convert(int currentPos){
+    public static int[] convert(int currentPos){// basically convert a currentPos numerical value into a set of coordinates for the actual board to use to save/move checkers for the game
         int[] ret = new int[2];
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
@@ -153,7 +189,9 @@ public class game {
         }
     }
 
-    public static void score(){
+    public static void score(){// maybe we should make red/white into static variables at the top, and make this solely a checkScore method
+        // from there we could increment the red/white count in the last part of the move() function using the check variable 
+        // just seems more efficient than looping through the whole array each time to get the score
         int red = 0;
         int white = 0;
         for (int i = 0; i < 8; i++){
@@ -168,9 +206,11 @@ public class game {
         }
         if (red == 0){
             System.out.println("White Won!");
+            run = false;
         }
         else if (white == 0){
             System.out.println("Red Won!");
+            run = false;
         }
         else{
             System.out.printf("Red: %d\nWhite: %d\n", red, white);
@@ -180,5 +220,18 @@ public class game {
     public static void createTree(){
         Node root = new Node();
         tree = new Tree<>(root);
+    }
+
+    public static void printTurn() {
+        if (turn == 'R')
+            System.out.println("It is red's turn.");
+        else
+            System.out.println("It is black's turn.");
+    }
+
+    public static void newInput() {
+        String str = s.nextLine();
+        String[] splitted = str.split(" ");
+        move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
     }
 }
