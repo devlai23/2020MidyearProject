@@ -54,6 +54,9 @@ public class game {
     }
 
     public static void move(int currentPos, int movePos){
+        if (check(currentPos, movePos)) {
+
+        }
         int row = -1; // move the selected position (first number) in direction (second number)
         int mod = currentPos % 8;
         if (mod == 1 || mod == 2 || mod == 3 || mod == 4){ // see if the position is in an odd row
@@ -136,6 +139,12 @@ public class game {
             }
         }
         return ret;
+    }
+
+    public static boolean check(int currentPos, int movePos) {
+        
+        
+        return false;
     }
 
     public static void printBoard(){
