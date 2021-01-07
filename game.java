@@ -133,7 +133,12 @@ public class game {
         }
         int[] movePosConverted = convert(currentPos);
         // Errorcheck - System.out.printf("\nMoving to: [%d][%d]\n", movePosConverted[0], movePosConverted[1]);
-        
+        char movePiece = board[movePosConverted[0]][movePosConverted[1]];
+        if (movePiece==turn) {
+            System.out.println("Invalid Move, this piece will run into your own piece. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
         char check = ' ';
         if (temp == 'R'){
             check = 'W';
