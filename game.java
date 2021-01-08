@@ -3,7 +3,7 @@ import java.util.*;
 public class game {
     static char[][] board = new char[8][8];
     static boolean[][] king = new boolean[8][8];
-    static int[][] ref = {
+    static int[][] ref = {  
         {0, 1, 0, 2, 0, 3, 0, 4},
         {5, 0, 6, 0, 7, 0, 8, 0},
         {0, 9, 0, 10, 0, 11, 0, 12},
@@ -15,95 +15,60 @@ public class game {
     };
     static Tree<Node> tree;
     static boolean run = true;
-    static char turn = 'R'; // red = 'R'; white = 'W'
-    static Scanner s = new Scanner(System.in);
+    static char turn = 'R';
+    static Scanner s = new Scanner(System.in); 
     
     public static void main(String[] args) {
-
-        // white pieces
-        for (int i = 1; i < 8; i+=2){
-            board[0][i] = 'W';
-        } 
-        for (int i = 0; i < 8; i+=2){
-            board[1][i] = 'W';
-        }
-        for (int i = 1; i < 8; i+=2){
-            board[2][i] = 'W';
-        }
-
-        // red pieces
-        for (int i = 0; i < 8; i+=2){
-            board[5][i] = 'R';
-        }
-        for (int i = 1; i < 8; i+=2){
-            board[6][i] = 'R';
-        }
-        for (int i = 0; i < 8; i+=2){
-            board[7][i] = 'R';
-        }
+        pieceCreation();
         System.out.println("Welcome to CheckerBot");
 
-        while (run){
+        while (run) {
             System.out.println();
             score();
             printTurn();
             printBoard();
-            String str = s.nextLine();
-            String[] splitted = str.split(" ");
+            newInput();
             createTree();
-            move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
-            if (turn == 'R') {
+            if (turn == 'R')
                 turn = 'W';
-            }
-            else {
+            else
                 turn = 'R';
-            }
         }
         
         s.close();
     }
 
-    public static void move(int currentPos, int movePos){
-        if (movePos < 1 || movePos > 4) { // brief error checking to save the running of unnecessary code
+    public static void move(int currentPos, int movePos) {
+        if (movePos < 1 || movePos > 4) { // takes 4 possible inputs 
             System.out.println("Invalid Move, must be an integer from 1-4. Move given: " + movePos + ".");
             System.out.println("Try another move below.");
             newInput();
             return;
         }
-        System.out.println(turn);
-        if (turn == 'R' && (movePos == 3 || movePos == 4)){
-            System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
-            newInput();
-            return;
-        }
-        else if (turn == 'W' && (movePos == 1 || movePos == 2)){
-            System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
-            newInput();
-            return;
-        }
-
+        
+        // if not king (bc kings can move all 4 directions)
         if (turn == 'R' && (movePos == 3 || movePos == 4)) {
-            System.out.println("Invalid move, this piece must move forward. Move given: " + movePos + ".");
+            System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
             newInput();
             return;
         }
         else if (turn == 'W' && (movePos == 1 || movePos == 2)) {
-            System.out.println("Invalid move, this piece must move forward. Move given: " + movePos + ".");
+            System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
             newInput();
             return;
         }
 
-        int row = -1; // move the selected position (first number) in direction (second number)
-        int mod = currentPos % 8;
-        if (mod == 1 || mod == 2 || mod == 3 || mod == 4){ // see if the position is in an odd row
+        int row = -1; // even or odd row
+        int mod = currentPos % 8; 
+        if (mod == 1 || mod == 2 || mod == 3 || mod == 4) {
             row = 1;
         }
-        else if (mod == 5 || mod == 6 || mod == 7 || mod == 0){ // see if the position is in an even row
+        else if (mod == 5 || mod == 6 || mod == 7 || mod == 0) {
             row = 2;
         }
 
-        int[] currentPosConverted = convert(currentPos);  // this will call convert, which converts currentPos
-        // the below code will error check if the user is trying to move their checker into a wall instead of an open space (1/7/21)
+        int[] currentPosConverted = convert(currentPos);
+        // error check for off board
         if (turn == 'R' && currentPosConverted[1] == 0 && movePos == 1) {
             System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
             newInput();
@@ -124,35 +89,28 @@ public class game {
             newInput();
             return;
         }
-        if (!(board[currentPosConverted[0]][currentPosConverted[1]] == turn)){
+        if (!(board[currentPosConverted[0]][currentPosConverted[1]] == turn)) { // if try move other player piece
             System.out.println("Invalid Piece, must be " + turn);
             System.out.println("Try another move below.");
-            printBoard();
             newInput();
             return;
         }
-        char temp = board[currentPosConverted[0]][currentPosConverted[1]]; // ...coordinate for the original "board" array to access 
-        board[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // this will "delete" the current checker because it's being moved (set it to null)
+        char temp = board[currentPosConverted[0]][currentPosConverted[1]];
+        board[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // delete current position
         boolean kingTemp = king[currentPosConverted[0]][currentPosConverted[1]];
         
-        // the following conditional statements check if the row is even or odd, and increment the current position by a different number to have the correct move
-        // later (Tuesday) -- work on exceptions/invalid moves and how to handle them
-        /**
-         * exceptions: I think one way we could check is,
-         * assuming the user is operating the red checkers,
-         * if the first coordinate of the movePosConverted is not 1 greater than the currentPosConverted, its an invalid move?
-         * ^^ just a guess to help you guys get started with the error checking
-         */
-        if (movePos == 1 && row == 1){
+        // check if row is even or odd & increment (move)
+
+        if (movePos == 1 && row == 1) {
             currentPos -= 4;
         }
-        else if (movePos == 1 && row == 2){
+        else if (movePos == 1 && row == 2) {
             currentPos -= 5;
         }
-        else if (movePos == 2 && row == 1){
+        else if (movePos == 2 && row == 1) {
             currentPos -= 3;
         }
-        else if (movePos == 2 && row == 2){
+        else if (movePos == 2 && row == 2) {
             currentPos -= 4;
         }
         else if (movePos == 3 && row == 1){
@@ -168,7 +126,6 @@ public class game {
             currentPos += 3;
         }
         int[] movePosConverted = convert(currentPos);
-        System.out.printf("\nMoving to: [%d][%d]\n", movePosConverted[0], movePosConverted[1]);
         char movePiece = board[movePosConverted[0]][movePosConverted[1]];
         if (movePiece==turn) {
             System.out.println("Invalid Move, this piece will run into your own piece. Move given: " + movePos + ".");
@@ -176,13 +133,13 @@ public class game {
             return;
         }
         char check = ' ';
-        if (temp == 'R'){
+        if (temp == 'R') {
             check = 'W';
         }
-        else if (temp == 'W'){
+        else if (temp == 'W') {
             check = 'R';
         }
-        if (board[movePosConverted[0]][movePosConverted[1]] == check){
+        if (board[movePosConverted[0]][movePosConverted[1]] == check) { //checking if there is an oppoenent piece
             board[movePosConverted[0]][movePosConverted[1]] = '\0';
             if (movePos == 1){
                 movePosConverted[0] -= 1;
@@ -229,10 +186,28 @@ public class game {
         return ret;
     }
 
-    public static boolean check(int currentPos, int movePos) {
-        
-        
-        return false;
+    public static void pieceCreation() {
+        // white pieces
+        for (int i = 1; i < 8; i+=2){
+            board[0][i] = 'W';
+        } 
+        for (int i = 0; i < 8; i+=2){
+            board[1][i] = 'W';
+        }
+        for (int i = 1; i < 8; i+=2){
+            board[2][i] = 'W';
+        }
+
+        // red pieces
+        for (int i = 0; i < 8; i+=2){
+            board[5][i] = 'R';
+        }
+        for (int i = 1; i < 8; i+=2){
+            board[6][i] = 'R';
+        }
+        for (int i = 0; i < 8; i+=2){
+            board[7][i] = 'R';
+        }
     }
 
     public static void printBoard(){
@@ -288,4 +263,5 @@ public class game {
         String[] splitted = str.split(" ");
         move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
     }
+
 }
