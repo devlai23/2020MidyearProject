@@ -16,7 +16,7 @@ public class game {
     static Tree<Node> tree;
     static boolean run = true;
     static char turn = 'R'; // false is red
-    static Scanner s = new Scanner(System.in);
+    static Scanner s = new Scanner(System.in); 
     
     public static void main(String[] args) {
         // white pieces
