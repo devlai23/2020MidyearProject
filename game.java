@@ -42,7 +42,7 @@ public class game {
         }
         System.out.println("Welcome to CheckerBot");
 
-        while (run){ // question (Grant) -> when do we edit this run boolean to stop the loop when the game is over
+        while (run){
             System.out.println();
             score();
             printTurn();
@@ -64,6 +64,17 @@ public class game {
         if (movePos < 1 || movePos > 4) { // brief error checking to save the running of unnecessary code
             System.out.println("Invalid Move, must be an integer from 1-4. Move given: " + movePos + ".");
             System.out.println("Try another move below.");
+            newInput();
+            return;
+        }
+        System.out.println(turn);
+        if (turn == 'R' && (movePos == 3 || movePos == 4)){
+            System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
+        else if (turn == 'W' && (movePos == 1 || movePos == 2)){
+            System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
             newInput();
             return;
         }
@@ -93,6 +104,7 @@ public class game {
         if (!(board[currentPosConverted[0]][currentPosConverted[1]] == turn)) {
             System.out.println("Invalid Piece, must be " + turn + " piece");
             System.out.println("Try another move below.");
+            printBoard();
             newInput();
             return;
         }
@@ -223,10 +235,12 @@ public class game {
     }
 
     public static void printTurn() {
-        if (turn == 'R')
+        if (turn == 'R') {
             System.out.println("It is red's turn.");
-        else
-            System.out.println("It is black's turn.");
+        }
+        else {
+            System.out.println("It is white's turn.");
+        }
     }
 
     public static void newInput() {
