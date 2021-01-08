@@ -1,6 +1,6 @@
 error check the movement inputs
-- check if movement is blocked by your own piece
-- make sure there is space if jumping
+- check if movement is blocked by your own piece ✓
+- make sure there is space if jumping ✓
 - check if at end of board
 promote pieces (turning into a king)
 GUI

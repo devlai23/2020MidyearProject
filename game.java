@@ -88,7 +88,28 @@ public class game {
             row = 2;
         }
 
-        int[] currentPosConverted = convert(currentPos);  // this will call convert, which converts currentPos into a...
+        int[] currentPosConverted = convert(currentPos);  // this will call convert, which converts currentPos
+        // the below code will error check if the user is trying to move their checker into a wall instead of an open space (1/7/21)
+        if (turn == 'R' && currentPosConverted[1] == 0 && movePos == 1) {
+            System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
+        if (turn == 'W' && currentPosConverted[1] == 0 && movePos == 4) {
+            System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
+        if (turn == 'R' && currentPosConverted[1] == 7 && movePos == 2) {
+            System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
+        if (turn == 'W' && currentPosConverted[1] == 7 && movePos == 3) {
+            System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
         if (!(board[currentPosConverted[0]][currentPosConverted[1]] == turn)){
             System.out.println("Invalid Piece, must be " + turn);
             System.out.println("Try another move below.");
@@ -132,8 +153,13 @@ public class game {
             currentPos += 3;
         }
         int[] movePosConverted = convert(currentPos);
-        // Errorcheck - System.out.printf("\nMoving to: [%d][%d]\n", movePosConverted[0], movePosConverted[1]);
-        
+        System.out.printf("\nMoving to: [%d][%d]\n", movePosConverted[0], movePosConverted[1]);
+        char movePiece = board[movePosConverted[0]][movePosConverted[1]];
+        if (movePiece==turn) {
+            System.out.println("Invalid Move, this piece will run into your own piece. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
         char check = ' ';
         if (temp == 'R'){
             check = 'W';
