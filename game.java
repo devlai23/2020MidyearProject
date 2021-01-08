@@ -21,7 +21,6 @@ public class game {
     public static void main(String[] args) {
         pieceCreation();
         System.out.println("Welcome to CheckerBot");
-
         while (run) {
             System.out.println();
             score();
@@ -34,12 +33,12 @@ public class game {
             else
                 turn = 'R';
         }
-        
         s.close();
     }
 
     public static void move(int currentPos, int movePos) {
-        if (movePos < 1 || movePos > 4) { // takes 4 possible inputs 
+        // takes 4 possible inputs 
+        if (movePos < 1 || movePos > 4) {
             System.out.println("Invalid Move, must be an integer from 1-4. Move given: " + movePos + ".");
             System.out.println("Try another move below.");
             newInput();
@@ -96,8 +95,8 @@ public class game {
             return;
         }
         char temp = board[currentPosConverted[0]][currentPosConverted[1]];
-        board[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // delete current position
         boolean kingTemp = king[currentPosConverted[0]][currentPosConverted[1]];
+        board[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // delete current position
         
         // check if row is even or odd & increment (move)
 
@@ -125,9 +124,10 @@ public class game {
         else if (movePos == 4 && row == 2){
             currentPos += 3;
         }
+
         int[] movePosConverted = convert(currentPos);
         char movePiece = board[movePosConverted[0]][movePosConverted[1]];
-        if (movePiece==turn) {
+        if (movePiece==turn) { // check if you will hit your own piece
             System.out.println("Invalid Move, this piece will run into your own piece. Move given: " + movePos + ".");
             newInput();
             return;
@@ -139,7 +139,7 @@ public class game {
         else if (temp == 'W') {
             check = 'R';
         }
-        if (board[movePosConverted[0]][movePosConverted[1]] == check) { //checking if there is an oppoenent piece
+        if (board[movePosConverted[0]][movePosConverted[1]] == check) { //checking if there is an oppoenent piece, then taking it
             board[movePosConverted[0]][movePosConverted[1]] = '\0';
             if (movePos == 1){
                 movePosConverted[0] -= 1;
@@ -160,9 +160,11 @@ public class game {
         }
         board[movePosConverted[0]][movePosConverted[1]] = temp;
 
+        // swapping king array positions
         king[currentPosConverted[0]][currentPosConverted[1]] = king[movePosConverted[0]][movePosConverted[1]];
         king[movePosConverted[0]][movePosConverted[1]] = kingTemp;
         
+        // changes piece into a king if reaches the end
         if (turn == 'R' && movePosConverted[0] == 0) {
             king[movePosConverted[0]][movePosConverted[1]] = true;
         }
@@ -172,7 +174,7 @@ public class game {
 
     }
 
-    public static int[] convert(int currentPos){// basically convert a currentPos numerical value into a set of coordinates for the actual board to use to save/move checkers for the game
+    public static int[] convert(int currentPos){
         int[] ret = new int[2];
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
@@ -216,9 +218,7 @@ public class game {
         }
     }
 
-    public static void score(){// maybe we should make red/white into static variables at the top, and make this solely a checkScore method
-        // from there we could increment the red/white count in the last part of the move() function using the check variable 
-        // just seems more efficient than looping through the whole array each time to get the score
+    public static void score(){
         int red = 0;
         int white = 0;
         for (int i = 0; i < 8; i++){
