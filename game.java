@@ -29,7 +29,8 @@ public class game {
         }
         for (int i = 1; i < 8; i+=2){
             board[2][i] = 'W';
-        } 
+        }
+
         // red pieces
         for (int i = 0; i < 8; i+=2){
             board[5][i] = 'R';
@@ -51,10 +52,12 @@ public class game {
             String[] splitted = str.split(" ");
             createTree();
             move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
-            if (turn == 'R')
+            if (turn == 'R') {
                 turn = 'W';
-            else
+            }
+            else {
                 turn = 'R';
+            }
         }
         
         s.close();
@@ -99,10 +102,30 @@ public class game {
             row = 2;
         }
 
-        int[] currentPosConverted = convert(currentPos);  // this will call convert, which converts currentPos into a...
-
-        if (!(board[currentPosConverted[0]][currentPosConverted[1]] == turn)) {
-            System.out.println("Invalid Piece, must be " + turn + " piece");
+        int[] currentPosConverted = convert(currentPos);  // this will call convert, which converts currentPos
+        // the below code will error check if the user is trying to move their checker into a wall instead of an open space (1/7/21)
+        if (turn == 'R' && currentPosConverted[1] == 0 && movePos == 1) {
+            System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
+        if (turn == 'W' && currentPosConverted[1] == 0 && movePos == 4) {
+            System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
+        if (turn == 'R' && currentPosConverted[1] == 7 && movePos == 2) {
+            System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
+        if (turn == 'W' && currentPosConverted[1] == 7 && movePos == 3) {
+            System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
+        if (!(board[currentPosConverted[0]][currentPosConverted[1]] == turn)){
+            System.out.println("Invalid Piece, must be " + turn);
             System.out.println("Try another move below.");
             printBoard();
             newInput();
@@ -110,6 +133,7 @@ public class game {
         }
         char temp = board[currentPosConverted[0]][currentPosConverted[1]]; // ...coordinate for the original "board" array to access 
         board[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // this will "delete" the current checker because it's being moved (set it to null)
+        boolean kingTemp = king[currentPosConverted[0]][currentPosConverted[1]];
         
         // the following conditional statements check if the row is even or odd, and increment the current position by a different number to have the correct move
         // later (Tuesday) -- work on exceptions/invalid moves and how to handle them
@@ -144,8 +168,13 @@ public class game {
             currentPos += 3;
         }
         int[] movePosConverted = convert(currentPos);
-        // Errorcheck - System.out.printf("\nMoving to: [%d][%d]\n", movePosConverted[0], movePosConverted[1]);
-        
+        System.out.printf("\nMoving to: [%d][%d]\n", movePosConverted[0], movePosConverted[1]);
+        char movePiece = board[movePosConverted[0]][movePosConverted[1]];
+        if (movePiece==turn) {
+            System.out.println("Invalid Move, this piece will run into your own piece. Move given: " + movePos + ".");
+            newInput();
+            return;
+        }
         char check = ' ';
         if (temp == 'R'){
             check = 'W';
@@ -173,6 +202,17 @@ public class game {
             }
         }
         board[movePosConverted[0]][movePosConverted[1]] = temp;
+
+        king[currentPosConverted[0]][currentPosConverted[1]] = king[movePosConverted[0]][movePosConverted[1]];
+        king[movePosConverted[0]][movePosConverted[1]] = kingTemp;
+        
+        if (turn == 'R' && movePosConverted[0] == 0) {
+            king[movePosConverted[0]][movePosConverted[1]] = true;
+        }
+        else if (turn == 'W' && movePosConverted[0] == 7) {
+            king[movePosConverted[0]][movePosConverted[1]] = true;
+        }
+
     }
 
     public static int[] convert(int currentPos){// basically convert a currentPos numerical value into a set of coordinates for the actual board to use to save/move checkers for the game
