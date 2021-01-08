@@ -2,7 +2,7 @@ import java.util.*;
 
 public class game {
     static char[][] board = new char[8][8];
-    static boolean[][] king = new boolean[8][8]; //WILL WOROK ON THIS NEXT CLASS
+    static boolean[][] king = new boolean[8][8];
     static int[][] ref = {  
         {0, 1, 0, 2, 0, 3, 0, 4},
         {5, 0, 6, 0, 7, 0, 8, 0},
@@ -15,11 +15,10 @@ public class game {
     };
     static Tree<Node> tree;
     static boolean run = true;
-    static char turn = 'R'; // false is red
+    static char turn = 'R';
     static Scanner s = new Scanner(System.in); 
     
     public static void main(String[] args) {
-        // white pieces
         for (int i = 1; i < 8; i+=2){
             board[0][i] = 'W';
         } 
@@ -29,7 +28,6 @@ public class game {
         for (int i = 1; i < 8; i+=2){
             board[2][i] = 'W';
         } 
-        // red pieces
         for (int i = 0; i < 8; i+=2){
             board[5][i] = 'R';
         }
@@ -119,7 +117,8 @@ public class game {
         }
         char temp = board[currentPosConverted[0]][currentPosConverted[1]]; // ...coordinate for the original "board" array to access 
         board[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // this will "delete" the current checker because it's being moved (set it to null)
-        
+        boolean kingtemp = king[currentPosConverted[0]][currentPosConverted[1]];
+
         // the following conditional statements check if the row is even or odd, and increment the current position by a different number to have the correct move
         // later (Tuesday) -- work on exceptions/invalid moves and how to handle them
         /**
@@ -153,7 +152,6 @@ public class game {
             currentPos += 3;
         }
         int[] movePosConverted = convert(currentPos);
-        System.out.printf("\nMoving to: [%d][%d]\n", movePosConverted[0], movePosConverted[1]);
         char movePiece = board[movePosConverted[0]][movePosConverted[1]];
         if (movePiece==turn) {
             System.out.println("Invalid Move, this piece will run into your own piece. Move given: " + movePos + ".");
@@ -167,7 +165,7 @@ public class game {
         else if (temp == 'W'){
             check = 'R';
         }
-        if (board[movePosConverted[0]][movePosConverted[1]] == check){
+        if (board[movePosConverted[0]][movePosConverted[1]] == check){ //checking if there is an oppoenent piece
             board[movePosConverted[0]][movePosConverted[1]] = '\0';
             if (movePos == 1){
                 movePosConverted[0] -= 1;
@@ -187,6 +185,17 @@ public class game {
             }
         }
         board[movePosConverted[0]][movePosConverted[1]] = temp;
+
+        
+        king[currentPosConverted[0]][currentPosConverted[1]] = king[movePosConverted[0]][movePosConverted[1]]
+        king[movePosConverted[0]][movePosConverted[1]] = kingtemp;
+
+        if (turn == 'R' && movePosConverted[0] == 0){
+            king[movePosConverted[0]][movePosConverted[1]] = true;
+        }
+        else if (turn == 'W' && movePosConverted[0] == 7){
+            king[movePosConverted[0]][movePosConverted[1]] = true;
+        }
     }
 
     public static int[] convert(int currentPos){// basically convert a currentPos numerical value into a set of coordinates for the actual board to use to save/move checkers for the game
