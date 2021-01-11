@@ -139,27 +139,107 @@ public class game {
         else if (temp == 'W') {
             check = 'R';
         }
-        if (board[movePosConverted[0]][movePosConverted[1]] == check) { //checking if there is an oppoenent piece, then taking it
-            board[movePosConverted[0]][movePosConverted[1]] = '\0';
-            if (movePos == 1){
-                movePosConverted[0] -= 1;
-                movePosConverted[1] -= 1;
-            }
-            else if (movePos == 2){
-                movePosConverted[0] -= 1;
-                movePosConverted[1] += 1;
-            }
-            else if (movePos == 3){
-                movePosConverted[0] += 1;
-                movePosConverted[1] += 1;
-            }
-            else if (movePos == 4){
-                movePosConverted[0] += 1;
-                movePosConverted[1] -= 1;
+        ArrayList<Character> direction = new ArrayList<>();
+        if (movePos == 2){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x >= 0; x--){
+                direction.add(board[x][y]); 
+                y++;
             }
         }
-        board[movePosConverted[0]][movePosConverted[1]] = temp;
+        else if (movePos == 1){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x >= 0; x--){
+                direction.add(board[x][y]); 
+                y--;
+            }
+        }
+        else if (movePos == 3){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x <= 7; x++){
+                direction.add(board[x][y]); 
+                y++;
+            }
+        }
+        else if (movePos == 4){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x <= 7; x++){
+                direction.add(board[x][y]); 
+                y--;
+            }
+        }
+        
+        int x = 0;
+        int jumpdistance = 0;
+        while(direction.get(x) == check){
+            if (direction.get(x+1) == '\0'){
+                jumpdistance+=2;
+            }
+            else{
+                break;
+            }
+            x+=2;
+        }
 
+        if (jumpdistance > 0){
+            if (movePos == 1){
+                movePosConverted[0] = currentPosConverted[0] - jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] - jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    board[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = '\0';
+                    counter += 2;
+                }
+            }
+            else if (movePos == 2){
+                movePosConverted[0] = currentPosConverted[0] - jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] + jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    board[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = '\0';
+                    counter += 2;
+                }
+            }
+            else if (movePos == 3){
+                movePosConverted[0] = currentPosConverted[0] + jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] + jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    board[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = '\0';
+                    counter += 2;
+                }
+            }
+            else if (movePos == 4){
+                movePosConverted[0] = currentPosConverted[0] + jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] - jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    board[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = '\0';
+                    counter += 2;
+                }
+            }
+        }
+        // if (board[movePosConverted[0]][movePosConverted[1]] == check) { //checking if there is an oppoenent piece, then taking it
+        //     board[movePosConverted[0]][movePosConverted[1]] = '\0';
+        //     if (movePos == 1){
+        //         movePosConverted[0] -= 1;
+        //         movePosConverted[1] -= 1;
+        //     }
+        //     else if (movePos == 2){
+        //         movePosConverted[0] -= 1;
+        //         movePosConverted[1] += 1;
+        //     }
+        //     else if (movePos == 3){
+        //         movePosConverted[0] += 1;
+        //         movePosConverted[1] += 1;
+        //     }
+        //     else if (movePos == 4){
+        //         movePosConverted[0] += 1;
+        //         movePosConverted[1] -= 1;
+        //     }
+        // }
+
+        board[movePosConverted[0]][movePosConverted[1]] = temp;
         // swapping king array positions
         king[currentPosConverted[0]][currentPosConverted[1]] = king[movePosConverted[0]][movePosConverted[1]];
         king[movePosConverted[0]][movePosConverted[1]] = kingTemp;
