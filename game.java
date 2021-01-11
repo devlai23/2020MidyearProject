@@ -2,9 +2,9 @@ import java.util.*;
 
 public class game {
     static char[][] board = {
-        {'W', '\0', 'W', '\0', 'W', '\0', 'W', '\0'},
         {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
         {'W', '\0', 'W', '\0', 'W', '\0', 'W', '\0'},
+        {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
         {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
         {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
         {'R', '\0', 'R', '\0', 'R', '\0', 'R', '\0'},
@@ -187,7 +187,7 @@ public class game {
         
         int x = 0;
         int jumpdistance = 0;
-        while(direction.get(x) == check){
+        while(direction.get(x) == check && x<direction.size()-1){
             if (direction.get(x+1) == '\0'){
                 jumpdistance+=2;
             }
