@@ -143,29 +143,37 @@ public class game {
         if (movePos == 2){
             int y = movePosConverted[1];
             for (int x = movePosConverted[0]; x >= 0; x--){
-                direction.add(board[x][y]); 
-                y++;
+                if (x >= 0 && y >= 0){
+                    direction.add(board[x][y]); 
+                    y++;
+                }
             }
         }
         else if (movePos == 1){
             int y = movePosConverted[1];
             for (int x = movePosConverted[0]; x >= 0; x--){
-                direction.add(board[x][y]); 
-                y--;
+                if (x >= 0 && y >= 0){
+                    direction.add(board[x][y]); 
+                    y--;
+                }
             }
         }
         else if (movePos == 3){
             int y = movePosConverted[1];
             for (int x = movePosConverted[0]; x <= 7; x++){
-                direction.add(board[x][y]); 
-                y++;
+                if (x >= 0 && y >= 0){
+                    direction.add(board[x][y]); 
+                    y++;
+                }
             }
         }
         else if (movePos == 4){
             int y = movePosConverted[1];
             for (int x = movePosConverted[0]; x <= 7; x++){
-                direction.add(board[x][y]); 
-                y--;
+                if (x >= 0 && y >= 0){
+                    direction.add(board[x][y]); 
+                    y--;
+                }
             }
         }
         
