@@ -227,25 +227,6 @@ public class game {
                 }
             }
         }
-        // if (board[movePosConverted[0]][movePosConverted[1]] == check) { //checking if there is an oppoenent piece, then taking it
-        //     board[movePosConverted[0]][movePosConverted[1]] = '\0';
-        //     if (movePos == 1){
-        //         movePosConverted[0] -= 1;
-        //         movePosConverted[1] -= 1;
-        //     }
-        //     else if (movePos == 2){
-        //         movePosConverted[0] -= 1;
-        //         movePosConverted[1] += 1;
-        //     }
-        //     else if (movePos == 3){
-        //         movePosConverted[0] += 1;
-        //         movePosConverted[1] += 1;
-        //     }
-        //     else if (movePos == 4){
-        //         movePosConverted[0] += 1;
-        //         movePosConverted[1] -= 1;
-        //     }
-        // }
 
         board[movePosConverted[0]][movePosConverted[1]] = temp;
         // swapping king array positions
