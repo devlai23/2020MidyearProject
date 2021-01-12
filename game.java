@@ -1,7 +1,16 @@
 import java.util.*;
 
 public class game {
-    static char[][] board = new char[8][8];
+    static char[][] board = {
+        {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
+        {'W', '\0', 'W', '\0', 'W', '\0', 'W', '\0'},
+        {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
+        {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
+        {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
+        {'R', '\0', 'R', '\0', 'R', '\0', 'R', '\0'},
+        {'\0', 'R', '\0', 'R', '\0', 'R', '\0', 'R'},
+        {'R', '\0', 'R', '\0', 'R', '\0', 'R', '\0'}
+    };
     static boolean[][] king = new boolean[8][8];
     static int[][] ref = {  
         {0, 1, 0, 2, 0, 3, 0, 4},
@@ -19,7 +28,6 @@ public class game {
     static Scanner s = new Scanner(System.in); 
     
     public static void main(String[] args) {
-        pieceCreation();
         System.out.println("Welcome to CheckerBot");
         while (run) {
             System.out.println();
@@ -179,7 +187,7 @@ public class game {
         
         int x = 0;
         int jumpdistance = 0;
-        while(direction.get(x) == check){
+        while(direction.get(x) == check && x<direction.size()-1){
             if (direction.get(x+1) == '\0'){
                 jumpdistance+=2;
             }
@@ -255,30 +263,6 @@ public class game {
             }
         }
         return ret;
-    }
-
-    public static void pieceCreation() {
-        // white pieces
-        for (int i = 1; i < 8; i+=2){
-            board[0][i] = 'W';
-        } 
-        for (int i = 0; i < 8; i+=2){
-            board[1][i] = 'W';
-        }
-        for (int i = 1; i < 8; i+=2){
-            board[2][i] = 'W';
-        }
-
-        // red pieces
-        for (int i = 0; i < 8; i+=2){
-            board[5][i] = 'R';
-        }
-        for (int i = 1; i < 8; i+=2){
-            board[6][i] = 'R';
-        }
-        for (int i = 0; i < 8; i+=2){
-            board[7][i] = 'R';
-        }
     }
 
     public static void printBoard(){
