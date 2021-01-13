@@ -54,7 +54,6 @@ public class game {
             newInput();
             return;
         }
-        
 
         int row = -1; // even or odd row
         int mod = currentPos % 8; 
@@ -67,10 +66,6 @@ public class game {
 
         int[] currentPosConverted = convert(currentPos);
 
-        // if not king (bc kings can move all 4 directions)
-        // for (int i = 0; i < 8; i++){
-        //     System.out.println(Arrays.toString(king[i]));
-        // }
         if (!king[currentPosConverted[0]][currentPosConverted[1]]){
             if (turn == 'R' && (movePos == 3 || movePos == 4)) {
                 System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
@@ -196,7 +191,7 @@ public class game {
         int x = 0;
         int jumpdistance = 0;
         System.out.println(direction);
-        while(x < direction.size() && direction.get(x) == check){// single jump didn't work
+        while(x < direction.size() && direction.get(x) == check){
             if (x+1<direction.size() && direction.get(x+1) == '\0'){
                 jumpdistance+=2;
             }
