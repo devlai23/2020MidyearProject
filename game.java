@@ -68,9 +68,9 @@ public class game {
         int[] currentPosConverted = convert(currentPos);
 
         // if not king (bc kings can move all 4 directions)
-        for (int i = 0; i < 8; i++){
-            System.out.println(Arrays.toString(king[i]));
-        }
+        // for (int i = 0; i < 8; i++){
+        //     System.out.println(Arrays.toString(king[i]));
+        // }
         System.out.println(king[currentPosConverted[0]][currentPosConverted[1]]);
         if (!king[currentPosConverted[0]][currentPosConverted[1]]){
             if (turn == 'R' && (movePos == 3 || movePos == 4)) {
@@ -196,13 +196,16 @@ public class game {
         
         int x = 0;
         int jumpdistance = 0;
-        while(direction.get(x) == check){
+        System.out.println("Direction array: " + direction);
+        while(direction.get(x) == check){// single jump didn't work
             if (x+1<direction.size() && direction.get(x+1) == '\0'){
                 jumpdistance+=2;
             }
             else{
-                System.out.println("Invalid Move, there must be an empty space behind.");
-                newInput();
+                if (jumpdistance<2) {
+                    System.out.println("Invalid Move, there must be an empty space behind.");
+                    newInput();
+                }
                 return;
             }
             x+=2;
