@@ -1,7 +1,16 @@
 import java.util.*;
 
 public class game {
-    static char[][] board = new char[8][8];
+    static char[][] board = {
+        {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
+        {'W', '\0', 'W', '\0', 'W', '\0', 'W', '\0'},
+        {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
+        {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
+        {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
+        {'R', '\0', 'R', '\0', 'R', '\0', 'R', '\0'},
+        {'\0', 'R', '\0', 'R', '\0', 'R', '\0', 'R'},
+        {'R', '\0', 'R', '\0', 'R', '\0', 'R', '\0'}
+    };
     static boolean[][] king = new boolean[8][8];
     static int[][] ref = {  
         {0, 1, 0, 2, 0, 3, 0, 4},
@@ -19,19 +28,20 @@ public class game {
     static Scanner s = new Scanner(System.in); 
     
     public static void main(String[] args) {
-        pieceCreation();
         System.out.println("Welcome to CheckerBot");
         while (run) {
             System.out.println();
             score();
-            printTurn();
-            printBoard();
-            newInput();
-            createTree();
-            if (turn == 'R')
-                turn = 'W';
-            else
-                turn = 'R';
+            if (run){
+                printTurn();
+                printBoard();
+                newInput();
+                createTree();
+                if (turn == 'R')
+                    turn = 'W';
+                else
+                    turn = 'R';
+            }
         }
         s.close();
     }
@@ -41,18 +51,6 @@ public class game {
         if (movePos < 1 || movePos > 4) {
             System.out.println("Invalid Move, must be an integer from 1-4. Move given: " + movePos + ".");
             System.out.println("Try another move below.");
-            newInput();
-            return;
-        }
-        
-        // if not king (bc kings can move all 4 directions)
-        if (turn == 'R' && (movePos == 3 || movePos == 4)) {
-            System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
-            newInput();
-            return;
-        }
-        else if (turn == 'W' && (movePos == 1 || movePos == 2)) {
-            System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
             newInput();
             return;
         }
@@ -67,6 +65,19 @@ public class game {
         }
 
         int[] currentPosConverted = convert(currentPos);
+
+        if (!king[currentPosConverted[0]][currentPosConverted[1]]){
+            if (turn == 'R' && (movePos == 3 || movePos == 4)) {
+                System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
+                newInput();
+                return;
+            }
+            else if (turn == 'W' && (movePos == 1 || movePos == 2)) {
+                System.out.println("Invalid Move, this piece must move forward. Move given: " + movePos + ".");
+                newInput();
+                return;
+            }
+        }
         // error check for off board
         if (turn == 'R' && currentPosConverted[1] == 0 && movePos == 1) {
             System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
@@ -139,36 +150,110 @@ public class game {
         else if (temp == 'W') {
             check = 'R';
         }
-        if (board[movePosConverted[0]][movePosConverted[1]] == check) { //checking if there is an oppoenent piece, then taking it
-            board[movePosConverted[0]][movePosConverted[1]] = '\0';
-            if (movePos == 1){
-                movePosConverted[0] -= 1;
-                movePosConverted[1] -= 1;
-            }
-            else if (movePos == 2){
-                movePosConverted[0] -= 1;
-                movePosConverted[1] += 1;
-            }
-            else if (movePos == 3){
-                movePosConverted[0] += 1;
-                movePosConverted[1] += 1;
-            }
-            else if (movePos == 4){
-                movePosConverted[0] += 1;
-                movePosConverted[1] -= 1;
+        ArrayList<Character> direction = new ArrayList<>();
+        if (movePos == 2){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x >= 0; x--){
+                if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                    direction.add(board[x][y]); 
+                    y++;
+                }
             }
         }
-        board[movePosConverted[0]][movePosConverted[1]] = temp;
+        else if (movePos == 1){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x >= 0; x--){
+                if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                    direction.add(board[x][y]); 
+                    y--;
+                }
+            }
+        }
+        else if (movePos == 3){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x <= 7; x++){
+                if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                    direction.add(board[x][y]); 
+                    y++;
+                }
+            }
+        }
+        else if (movePos == 4){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x <= 7; x++){
+                if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                    direction.add(board[x][y]); 
+                    y--;
+                }
+            }
+        }
+        
+        int x = 0;
+        int jumpdistance = 0;
+        System.out.println(direction);
+        while(x < direction.size() && direction.get(x) == check){
+            if (x+1<direction.size() && direction.get(x+1) == '\0'){
+                jumpdistance+=2;
+            }
+            else{
+                if (jumpdistance<2) {
+                    System.out.println("Invalid Move, there must be an empty space behind.");
+                    newInput();
+                    return;
+                }
+            }
+            x+=2;
+        }
 
+        if (jumpdistance > 0){
+            if (movePos == 1){
+                movePosConverted[0] = currentPosConverted[0] - jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] - jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    board[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = '\0';
+                    counter += 2;
+                }
+            }
+            else if (movePos == 2){
+                movePosConverted[0] = currentPosConverted[0] - jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] + jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    board[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = '\0';
+                    counter += 2;
+                }
+            }
+            else if (movePos == 3){
+                movePosConverted[0] = currentPosConverted[0] + jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] + jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    board[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = '\0';
+                    counter += 2;
+                }
+            }
+            else if (movePos == 4){
+                movePosConverted[0] = currentPosConverted[0] + jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] - jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    board[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = '\0';
+                    counter += 2;
+                }
+            }
+        }
+
+        board[movePosConverted[0]][movePosConverted[1]] = temp;
         // swapping king array positions
         king[currentPosConverted[0]][currentPosConverted[1]] = king[movePosConverted[0]][movePosConverted[1]];
         king[movePosConverted[0]][movePosConverted[1]] = kingTemp;
         
         // changes piece into a king if reaches the end
-        if (turn == 'R' && movePosConverted[0] == 0) {
+        if (movePosConverted[0] == 0) {
             king[movePosConverted[0]][movePosConverted[1]] = true;
         }
-        else if (turn == 'W' && movePosConverted[0] == 7) {
+        else if (movePosConverted[0] == 7) {
             king[movePosConverted[0]][movePosConverted[1]] = true;
         }
 
@@ -186,30 +271,6 @@ public class game {
             }
         }
         return ret;
-    }
-
-    public static void pieceCreation() {
-        // white pieces
-        for (int i = 1; i < 8; i+=2){
-            board[0][i] = 'W';
-        } 
-        for (int i = 0; i < 8; i+=2){
-            board[1][i] = 'W';
-        }
-        for (int i = 1; i < 8; i+=2){
-            board[2][i] = 'W';
-        }
-
-        // red pieces
-        for (int i = 0; i < 8; i+=2){
-            board[5][i] = 'R';
-        }
-        for (int i = 1; i < 8; i+=2){
-            board[6][i] = 'R';
-        }
-        for (int i = 0; i < 8; i+=2){
-            board[7][i] = 'R';
-        }
     }
 
     public static void printBoard(){
@@ -263,5 +324,4 @@ public class game {
         String[] splitted = str.split(" ");
         move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
     }
-
 }
