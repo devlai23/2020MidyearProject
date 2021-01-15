@@ -25,7 +25,9 @@ public class game {
     static Tree<Node> tree;
     static boolean run = true;
     static char turn = 'R';
-    static Scanner s = new Scanner(System.in); 
+    static Scanner s = new Scanner(System.in);
+    static int redkings = 0;
+    static int whitekings = 0; 
     
     public static void main(String[] args) {
         System.out.println("Welcome to CheckerBot");
@@ -33,10 +35,14 @@ public class game {
             System.out.println();
             score();
             if (run){
+                if (turn == 'W'){ //ITS BOTS TURN!
+                    // evaluationscore es = new evaluationscore(board, redkings, whitekings);
+                    // double score = es.ret();
+                    createTree();
+                }
                 printTurn();
                 printBoard();
                 newInput();
-                createTree();
                 if (turn == 'R')
                     turn = 'W';
                 else
@@ -190,7 +196,6 @@ public class game {
         
         int x = 0;
         int jumpdistance = 0;
-        System.out.println(direction);
         while(x < direction.size() && direction.get(x) == check){
             if (x+1<direction.size() && direction.get(x+1) == '\0'){
                 jumpdistance+=2;
@@ -252,9 +257,11 @@ public class game {
         // changes piece into a king if reaches the end
         if (movePosConverted[0] == 0) {
             king[movePosConverted[0]][movePosConverted[1]] = true;
+            redkings++;
         }
         else if (movePosConverted[0] == 7) {
             king[movePosConverted[0]][movePosConverted[1]] = true;
+            whitekings++;
         }
 
     }
