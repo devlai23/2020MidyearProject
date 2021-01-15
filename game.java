@@ -35,14 +35,20 @@ public class game {
             System.out.println();
             score();
             if (run){
-                if (turn == 'W'){ //ITS BOTS TURN!
-                    // evaluationscore es = new evaluationscore(board, redkings, whitekings);
-                    // double score = es.ret();
-                    createTree();
-                }
                 printTurn();
                 printBoard();
-                newInput();
+                if (turn == 'W'){
+                    createTree();
+                    ArrayList<int[]> totalValidMoves = new ArrayList<int[]>();
+                    for (int i = 0; i < 8; i++){
+                        for (int j = 0; j < 8; j++){
+                            if (board[i][j] == 'W'){
+                                int[][] array = validMoves(i, j);
+                            }
+                        }
+                    }
+                }
+                newInput(); // later change so new input only occurs on player turn
                 if (turn == 'R')
                     turn = 'W';
                 else
@@ -84,6 +90,7 @@ public class game {
                 return;
             }
         }
+
         // error check for off board
         if (turn == 'R' && currentPosConverted[1] == 0 && movePos == 1) {
             System.out.println("Invalid Move, this piece must move ON THE BOARD to an open space. Move given: " + movePos + ".");
@@ -330,5 +337,90 @@ public class game {
         String str = s.nextLine();
         String[] splitted = str.split(" ");
         move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
+    }
+
+    public static int[][] validMoves(int i, int j){
+        int row;
+        if (i % 2 == 0){
+            row = 1;
+        }
+        else{
+            row = 2;
+        }
+        for (int x = 1; x <= 4; x++){
+            if (!king[i][j]){
+                if (x == 1 || x == 2) {
+                    continue;
+                }
+            }
+            if (j == 0 && x == 4) {
+                continue;
+            }
+            if (j == 7 && x == 3) {
+                continue;
+            }
+
+            int newi;
+            int newj;
+
+            if (x == 1){
+                newi = i--;
+                newj = j--;
+            }
+            else if (x == 2){
+                newi = i--;
+                newj = j++;
+            }
+            else if (x == 3){
+                newi = i++;
+                newj = j++;
+            }
+            else{
+                newi = i++;
+                newj = j--;
+            }
+            char movePiece = board[newi][newj];
+            if (movePiece==turn) { // check if you will hit your own piece
+                continue;
+            }
+
+            // ArrayList<Character> direction = new ArrayList<>();
+            // if (x == 2){
+            //     int y = newj;
+            //     for (int x = movePosConverted[0]; x >= 0; x--){
+            //         if (x >= 0 && y >= 0 && x < 8 && y < 8){
+            //             direction.add(board[x][y]); 
+            //             y++;
+            //         }
+            //     }
+            // }
+            // else if (x == 1){
+            //     int y = newj;
+            //     for (int x = movePosConverted[0]; x >= 0; x--){
+            //         if (x >= 0 && y >= 0 && x < 8 && y < 8){
+            //             direction.add(board[x][y]); 
+            //             y--;
+            //         }
+            //     }
+            // }
+            // else if (x == 3){
+            //     int y = newj;
+            //     for (int x = movePosConverted[0]; x <= 7; x++){
+            //         if (x >= 0 && y >= 0 && x < 8 && y < 8){
+            //             direction.add(board[x][y]); 
+            //             y++;
+            //         }
+            //     }
+            // }
+            // else if (x == 4){
+            //     int y = newj;
+            //     for (int x = movePosConverted[0]; x <= 7; x++){
+            //         if (x >= 0 && y >= 0 && x < 8 && y < 8){
+            //             direction.add(board[x][y]); 
+            //             y--;
+            //         }
+            //     }
+            // }
+        }
     }
 }
