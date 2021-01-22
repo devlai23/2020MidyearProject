@@ -45,9 +45,15 @@ public class game {
                     for (int i = 0; i < 8; i++){
                         for (int j = 0; j < 8; j++){
                             if (board[i][j] == 'W'){
-                                int[][] array = validMoves(i, j);
+                                ArrayList<int[]> array = validMoves(i, j);
+                                for (int k = 0; k < array.size(); k++){
+                                    totalValidMoves.add(array.get(k));
+                                }
                             }
                         }
+                    }
+                    for (int i = 0; i < totalValidMoves.size(); i++){
+                        System.out.println(Arrays.toString(totalValidMoves.get(i)));
                     }
                 }
                 newInput(); // later change so new input only occurs on player turn
@@ -341,7 +347,12 @@ public class game {
         move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
     }
 
-    public static int[][] validMoves(int i, int j){
+    public static ArrayList<int[]> validMoves(int i, int j){
+        System.out.println(i);
+        System.out.println(j + "\n");
+        ArrayList<int[]> ret = new ArrayList<int[]>();
+        int savei = i;
+        int savej = j;
         int row;
         if (i % 2 == 0){
             row = 1;
@@ -349,31 +360,34 @@ public class game {
         else{
             row = 2;
         }
-        for (int x = 1; x <= 4; x++){
+
+        //check for: make sure it moves forward unless king, make sure not off board, check it will not hit own piece, 
+        //check if jump is valid
+        for (int a = 1; a <= 4; a++){
             if (!king[i][j]){
-                if (x == 1 || x == 2) {
+                if (a == 1 || a == 2) {
                     continue;
                 }
             }
-            if (j == 0 && x == 4) {
+            if (j == 0 && a == 4) {
                 continue;
             }
-            if (j == 7 && x == 3) {
+            if (j == 7 && a == 3) {
                 continue;
             }
 
             int newi;
             int newj;
 
-            if (x == 1){
+            if (a == 1){
                 newi = i--;
                 newj = j--;
             }
-            else if (x == 2){
+            else if (a == 2){
                 newi = i--;
                 newj = j++;
             }
-            else if (x == 3){
+            else if (a == 3){
                 newi = i++;
                 newj = j++;
             }
@@ -382,48 +396,71 @@ public class game {
                 newj = j--;
             }
             char movePiece = board[newi][newj];
-            if (movePiece==turn) { // check if you will hit your own piece
+            if (movePiece=='W') { // check if you will hit your own piece
+                if (savei == 2 && savej == 1){
+                    System.out.println("alalakfksdfksdfjds");
+                }
                 continue;
             }
 
-            // ArrayList<Character> direction = new ArrayList<>();
-            // if (x == 2){
-            //     int y = newj;
-            //     for (int x = movePosConverted[0]; x >= 0; x--){
-            //         if (x >= 0 && y >= 0 && x < 8 && y < 8){
-            //             direction.add(board[x][y]); 
-            //             y++;
-            //         }
-            //     }
-            // }
-            // else if (x == 1){
-            //     int y = newj;
-            //     for (int x = movePosConverted[0]; x >= 0; x--){
-            //         if (x >= 0 && y >= 0 && x < 8 && y < 8){
-            //             direction.add(board[x][y]); 
-            //             y--;
-            //         }
-            //     }
-            // }
-            // else if (x == 3){
-            //     int y = newj;
-            //     for (int x = movePosConverted[0]; x <= 7; x++){
-            //         if (x >= 0 && y >= 0 && x < 8 && y < 8){
-            //             direction.add(board[x][y]); 
-            //             y++;
-            //         }
-            //     }
-            // }
-            // else if (x == 4){
-            //     int y = newj;
-            //     for (int x = movePosConverted[0]; x <= 7; x++){
-            //         if (x >= 0 && y >= 0 && x < 8 && y < 8){
-            //             direction.add(board[x][y]); 
-            //             y--;
-            //         }
-            //     }
-            // }
+            ArrayList<Character> direction = new ArrayList<>();
+            if (a == 2){
+                int y = newj;
+                for (int x = newi; x >= 0; x--){
+                    if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                        direction.add(board[x][y]); 
+                        y++;
+                    }
+                }
+            }
+            else if (a == 1){
+                int y = newj;
+                for (int x = newi; x >= 0; x--){
+                    if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                        direction.add(board[x][y]); 
+                        y--;
+                    }
+                }
+            }
+            else if (a == 3){
+                int y = newj;
+                for (int x = newi; x <= 7; x++){
+                    if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                        direction.add(board[x][y]); 
+                        y++;
+                    }
+                }
+            }
+            else if (a == 4){
+                int y = newj;
+                for (int x = newi; x <= 7; x++){
+                    if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                        direction.add(board[x][y]); 
+                        y--;
+                    }
+                }
+            }
+            int x = 0;
+            int jumpdistance = 0;
+            while(x < direction.size() && direction.get(x) == 'R'){
+                if (x+1<direction.size() && direction.get(x+1) == '\0'){
+                    jumpdistance+=2;
+                }
+                else{
+                    if (jumpdistance<2) {
+                        continue;
+                    }
+                }
+                x+=2;
+            }
+
+            int[] add = new int[3];
+            add[0] = savei;
+            add[1] = savej;
+            add[2] = a;
+            ret.add(add);
         }
-        return ref;
+
+        return ret;
     }
 }
