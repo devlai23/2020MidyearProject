@@ -34,10 +34,17 @@ public class gui_board extends Application {
 
                     rect.setFill(Color.WHITE);
                     if ((r+c) % 2 == 1) {
-                        rect.setFill(Color.BLACK);
+                        rect.setFill(Color.LIGHTBLUE);
                     }
 
                     pane.getChildren().add(rect);
+
+                    if (game.turn == 'R') {
+                        pane.getChildren().add(Checker.redImageView);
+                    }
+                    else if (game.turn == 'W') {
+                        pane.getChildren().add(Checker.blackImageView);
+                    }
                 }
             }
 
