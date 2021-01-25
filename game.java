@@ -37,6 +37,7 @@ public class game {
             if (run){
                 printTurn();
                 printBoard();
+
                 if (turn == 'W'){
                     createTree();
                     ArrayList<int[]> totalValidMoves = new ArrayList<int[]>();
@@ -50,10 +51,14 @@ public class game {
                             }
                         }
                     }
-                    for (int i = 0; i < totalValidMoves.size(); i++){
-                        System.out.println(Arrays.toString(totalValidMoves.get(i)));
+                    for (int i = 0; i < totalValidMoves.size(); i++){//test all valid moves
+                        char[][] arraycopy = new char[board.length][board[0].length];
+                        for (int j = 0; j < board.length; i++){
+
+                        }
                     }
                 }
+
                 newInput(); // later change so new input only occurs on player turn
                 if (turn == 'R')
                     turn = 'W';
@@ -346,8 +351,6 @@ public class game {
     }
 
     public static ArrayList<int[]> validMoves(int i, int j){
-        System.out.println(i);
-        System.out.println(j + "\n");
         ArrayList<int[]> ret = new ArrayList<int[]>();
         int savei = i;
         int savej = j;
@@ -378,26 +381,23 @@ public class game {
             int newj;
 
             if (a == 1){
-                newi = i--;
-                newj = j--;
+                newi = i-1;
+                newj = j-1;
             }
             else if (a == 2){
-                newi = i--;
-                newj = j++;
+                newi = i-1;
+                newj = j+1;
             }
             else if (a == 3){
-                newi = i++;
-                newj = j++;
+                newi = i+1;
+                newj = j+1;
             }
             else{
-                newi = i++;
-                newj = j--;
+                newi = i+1;
+                newj = j-1;
             }
             char movePiece = board[newi][newj];
             if (movePiece=='W') { // check if you will hit your own piece
-                if (savei == 2 && savej == 1){
-                    System.out.println("alalakfksdfksdfjds");
-                }
                 continue;
             }
 
