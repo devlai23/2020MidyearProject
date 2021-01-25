@@ -1,3 +1,5 @@
+package javafx.src;
+
 public class evaluationscore {
     static char[][] board;
     static double evalScore; //positive favors red, negative favors white

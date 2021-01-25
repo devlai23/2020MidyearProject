@@ -1,4 +1,6 @@
-public class Tree<E>{
+package javafx.src;
+
+public class Tree<E> {
     public Node root;
 
     public Tree(Node root){

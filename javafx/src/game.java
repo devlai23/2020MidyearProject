@@ -1,3 +1,5 @@
+package javafx.src;
+
 import java.util.*;
 
 public class game {
