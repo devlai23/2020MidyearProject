@@ -29,4 +29,4 @@ public class Node{ // maybe need siblings
 
     // as we make more constructors we'll need more addChild, removeChild methods
     // these will make the actual "scoring" method for the bot much easier 
-}
+}   
