@@ -53,20 +53,29 @@ public class game {
                         }
                     }
 
-                    // for (int i = 0; i < totalValidMoves.size(); i++){
-                    //     System.out.println(Arrays.toString(totalValidMoves.get(i)));
-                    // }
+                    for (int i = 0; i < totalValidMoves.size(); i++){
+                        System.out.println(Arrays.toString(totalValidMoves.get(i)));
+                    }
                     for (int i = 0; i < totalValidMoves.size(); i++){ //test all valid moves
                         for (int j = 0; j < board.length; j++){
                             for (int k = 0; k < board[j].length; k++){
                                 arraycopy[j][k] = board[j][k];
                             }
                         }
+                        int[] botinput = new int[3];
+                        botinput[0] = totalValidMoves.get(i)[0];
+                        botinput[1] = totalValidMoves.get(i)[1];
+                        botinput[2] = totalValidMoves.get(i)[2];
                         
-                        int val1 = totalValidMoves.get(i)[0];
-                        int val2 = totalValidMoves.get(i)[1];
-                        int direction = totalValidMoves.get(i)[2];
-
+                        botmove(botinput);
+                        for (int j = 0; j < 8; j++){
+                            System.out.println(Arrays.toString(arraycopy[j]));
+                        }
+                        System.out.println();
+                        //note the score
+                        
+                        //reset arraycopy for next time
+                        arraycopyclear();
                     }
                 }
 
@@ -511,8 +520,6 @@ public class game {
         char check = 'R';
         ArrayList<Character> direction = new ArrayList<>();
 
-        //IM UP TO HERERJEIORJIEOJROEJIRJEIOJRIOEJR
-
         if (movePos == 2){
             int y = movePosConverted[1];
             for (int x = movePosConverted[0]; x >= 0; x--){
@@ -556,13 +563,6 @@ public class game {
             if (x+1<direction.size() && direction.get(x+1) == '\0'){
                 jumpdistance+=2;
             }
-            else{
-                if (jumpdistance<2) {
-                    System.out.println("Invalid Move, there must be an empty space behind.");
-                    newInput();
-                    return;
-                }
-            }
             x+=2;
         }
 
@@ -572,7 +572,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] - jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = '\0';
+                    arraycopy[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = '\0';
                     counter += 2;
                 }
             }
@@ -581,7 +581,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] + jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = '\0';
+                    arraycopy[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = '\0';
                     counter += 2;
                 }
             }
@@ -590,7 +590,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] + jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = '\0';
+                    arraycopy[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = '\0';
                     counter += 2;
                 }
             }
@@ -599,26 +599,20 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] - jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = '\0';
+                    arraycopy[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = '\0';
                     counter += 2;
                 }
             }
         }
 
-        board[movePosConverted[0]][movePosConverted[1]] = temp;
-        // swapping king array positions
-        king[currentPosConverted[0]][currentPosConverted[1]] = king[movePosConverted[0]][movePosConverted[1]];
-        king[movePosConverted[0]][movePosConverted[1]] = kingTemp;
-        
-        // changes piece into a king if reaches the end
-        if (movePosConverted[0] == 0) {
-            king[movePosConverted[0]][movePosConverted[1]] = true;
-            redkings++;
-        }
-        else if (movePosConverted[0] == 7) {
-            king[movePosConverted[0]][movePosConverted[1]] = true;
-            whitekings++;
-        }
+        arraycopy[movePosConverted[0]][movePosConverted[1]] = temp;
+    }
 
+    public static void arraycopyclear(){
+        for (int i = 0; i < arraycopy.length; i++){
+            for (int j = 0; j < arraycopy[i].length; j++){
+                arraycopy[i][j] = '\0';
+            }
+        }
     }
 }
