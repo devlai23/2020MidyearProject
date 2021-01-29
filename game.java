@@ -53,9 +53,10 @@ public class game {
                         }
                     }
 
-                    for (int i = 0; i < totalValidMoves.size(); i++){
-                        System.out.println(Arrays.toString(totalValidMoves.get(i)));
-                    }
+                    // for (int i = 0; i < totalValidMoves.size(); i++){
+                    //     System.out.println(Arrays.toString(totalValidMoves.get(i)));
+                    // }
+                    // prints all valid bot moves
                     for (int i = 0; i < totalValidMoves.size(); i++){ //test all valid moves
                         for (int j = 0; j < board.length; j++){
                             for (int k = 0; k < board[j].length; k++){
@@ -68,15 +69,28 @@ public class game {
                         botinput[2] = totalValidMoves.get(i)[2];
                         
                         botmove(botinput);
-                        for (int j = 0; j < 8; j++){
-                            System.out.println(Arrays.toString(arraycopy[j]));
-                        }
-                        System.out.println();
-                        //note the score
+                        // for (int j = 0; j < 8; j++){
+                        //     System.out.println(Arrays.toString(arraycopy[j]));
+                        // }
+                        // prints the simulated bot moves
                         
+                        //note the score
+                        evaluationscore es = new evaluationscore(arraycopy, redkings, whitekings);
+                        double score = es.ret();
+                        // System.out.println(score);
+                        // System.out.println();
+                        // prints eval score of each simulated move
+                        t.root.addChild(score); //MAKE IT EVALUATE FARTHER DOWN LATER
+
                         //reset arraycopy for next time
                         arraycopyclear();
                     }
+
+
+                    t.printTree();
+
+                    Collections.sort(t.root.children);
+
                 }
 
                 newInput(); // later change so new input only occurs on player turn
