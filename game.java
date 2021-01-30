@@ -38,6 +38,7 @@ public class game {
             if (run){
                 printTurn();
                 printBoard();
+                Node choice = null;
 
                 if (turn == 'W'){
                     Tree<Node> t = createTree();
@@ -80,20 +81,39 @@ public class game {
                         // System.out.println(score);
                         // System.out.println();
                         // prints eval score of each simulated move
-                        t.root.addChild(score); //MAKE IT EVALUATE FARTHER DOWN LATER
+                        t.root.addChild(score, botinput[0], botinput[1], botinput[2]); //MAKE IT EVALUATE FARTHER DOWN LATER
 
                         //reset arraycopy for next time
                         arraycopyclear();
                     }
 
-
-                    t.printTree();
-
                     Collections.sort(t.root.children);
+                    // t.printTree();
+                    double baseval = t.root.children.get(0).value;
 
+                    for (int i = t.root.children.size()-1; i >= 0; i--){ //narrow down to optimal moves
+                        if (t.root.children.get(i).value > baseval){
+                            t.root.children.remove(i);
+                        }
+                    }
+                    Random r = new Random();
+                    choice = t.root.children.get(r.nextInt(t.root.children.size()));
+                    System.out.println(choice);
                 }
 
-                newInput(); // later change so new input only occurs on player turn
+                if (turn == 'W'){
+                    int[] param = new int[2];
+                    param[0] = choice.i;
+                    param[1] = choice.j;
+                    int moveParam = reverseConvert(param);
+                    System.out.println(moveParam);
+                    move(moveParam, choice.direction);
+                }
+                if (turn == 'R'){
+                    newInput();
+                }
+
+
                 if (turn == 'R')
                     turn = 'W';
                 else
@@ -332,6 +352,17 @@ public class game {
         return ret;
     }
 
+    public static int reverseConvert(int[] currentPos){
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                if ((i == currentPos[0]) && (j == currentPos[1])){
+                    return ref[i][j];
+                }
+            }
+        }
+        return -1;
+    }
+
     public static void printBoard(){
         for (int i = 0; i < 8; i++){
             System.out.println(Arrays.toString(board[i]));
@@ -473,6 +504,7 @@ public class game {
                     }
                 }
             }
+            boolean flag = false;
             int x = 0;
             int jumpdistance = 0;
             while(x < direction.size() && direction.get(x) == 'R'){
@@ -481,10 +513,13 @@ public class game {
                 }
                 else{
                     if (jumpdistance<2) {
-                        continue;
+                        flag = true;
                     }
                 }
                 x+=2;
+            }
+            if (flag){
+                continue;
             }
 
             int[] add = new int[3];
@@ -493,7 +528,6 @@ public class game {
             add[2] = a;
             ret.add(add);
         }
-
         return ret;
     }
 
