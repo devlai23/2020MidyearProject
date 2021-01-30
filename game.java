@@ -2,14 +2,14 @@ import java.util.*;
 
 public class game {
     static char[][] board = {
-        {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
-        {'W', '\0', 'W', '\0', 'W', '\0', 'W', '\0'},
-        {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
-        {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
-        {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
-        {'R', '\0', 'R', '\0', 'R', '\0', 'R', '\0'},
-        {'\0', 'R', '\0', 'R', '\0', 'R', '\0', 'R'},
-        {'R', '\0', 'R', '\0', 'R', '\0', 'R', '\0'}
+        {' ', 'W', ' ', 'W', ' ', 'W', ' ', 'W'},
+        {'W', ' ', 'W', ' ', 'W', ' ', 'W', ' '},
+        {' ', 'W', ' ', 'W', ' ', 'W', ' ', 'W'},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {'R', ' ', 'R', ' ', 'R', ' ', 'R', ' '},
+        {' ', 'R', ' ', 'R', ' ', 'R', ' ', 'R'},
+        {'R', ' ', 'R', ' ', 'R', ' ', 'R', ' '}
     };
     static boolean[][] king = new boolean[8][8];
     static int[][] ref = {  
@@ -185,7 +185,7 @@ public class game {
         }
         char temp = board[currentPosConverted[0]][currentPosConverted[1]];
         boolean kingTemp = king[currentPosConverted[0]][currentPosConverted[1]];
-        board[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // delete current position
+        board[currentPosConverted[0]][currentPosConverted[1]] = ' ';  // delete current position
         
         // check if row is even or odd & increment (move)
 
@@ -269,7 +269,7 @@ public class game {
         int x = 0;
         int jumpdistance = 0;
         while(x < direction.size() && direction.get(x) == check){
-            if (x+1<direction.size() && direction.get(x+1) == '\0'){
+            if (x+1<direction.size() && direction.get(x+1) == ' '){
                 jumpdistance+=2;
             }
             else{
@@ -288,7 +288,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] - jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = '\0';
+                    board[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = ' ';
                     counter += 2;
                 }
             }
@@ -297,7 +297,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] + jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = '\0';
+                    board[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = ' ';
                     counter += 2;
                 }
             }
@@ -306,7 +306,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] + jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = '\0';
+                    board[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = ' ';
                     counter += 2;
                 }
             }
@@ -315,7 +315,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] - jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = '\0';
+                    board[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = ' ';
                     counter += 2;
                 }
             }
@@ -508,7 +508,7 @@ public class game {
             int x = 0;
             int jumpdistance = 0;
             while(x < direction.size() && direction.get(x) == 'R'){
-                if (x+1<direction.size() && direction.get(x+1) == '\0'){
+                if (x+1<direction.size() && direction.get(x+1) == ' '){
                     jumpdistance+=2;
                 }
                 else{
@@ -543,7 +543,7 @@ public class game {
         }
 
         char temp = arraycopy[currentPosConverted[0]][currentPosConverted[1]];
-        arraycopy[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // delete current position
+        arraycopy[currentPosConverted[0]][currentPosConverted[1]] = ' ';  // delete current position
         
         // check if row is even or odd & increment (move)
 
@@ -608,7 +608,7 @@ public class game {
         int x = 0;
         int jumpdistance = 0;
         while(x < direction.size() && direction.get(x) == check){
-            if (x+1<direction.size() && direction.get(x+1) == '\0'){
+            if (x+1<direction.size() && direction.get(x+1) == ' '){
                 jumpdistance+=2;
             }
             x+=2;
@@ -620,7 +620,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] - jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    arraycopy[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = '\0';
+                    arraycopy[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = ' ';
                     counter += 2;
                 }
             }
@@ -629,7 +629,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] + jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    arraycopy[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = '\0';
+                    arraycopy[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = ' ';
                     counter += 2;
                 }
             }
@@ -638,7 +638,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] + jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    arraycopy[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = '\0';
+                    arraycopy[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = ' ';
                     counter += 2;
                 }
             }
@@ -647,7 +647,7 @@ public class game {
                 movePosConverted[1] = currentPosConverted[1] - jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    arraycopy[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = '\0';
+                    arraycopy[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = ' ';
                     counter += 2;
                 }
             }
