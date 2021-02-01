@@ -98,7 +98,6 @@ public class game {
                     }
                     Random r = new Random();
                     choice = t.root.children.get(r.nextInt(t.root.children.size()));
-                    System.out.println(choice);
                 }
 
                 if (turn == 'W'){
@@ -106,7 +105,6 @@ public class game {
                     param[0] = choice.i;
                     param[1] = choice.j;
                     int moveParam = reverseConvert(param);
-                    System.out.println(moveParam);
                     move(moveParam, choice.direction);
                 }
                 if (turn == 'R'){
