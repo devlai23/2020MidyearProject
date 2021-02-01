@@ -2,7 +2,7 @@ package javafx.src;
 
 import java.util.*;
 
-public class game {
+public class Game {
     static char[][] board = {
         {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
         {'W', '\0', 'W', '\0', 'W', '\0', 'W', '\0'},

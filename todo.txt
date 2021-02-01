@@ -10,3 +10,5 @@ Use some algorithm (USACO??) to go through the tree and find optimal move
 Make the bot actually move its piece
 
 make things functions for less main code
+
+FIX 0 AND 1 FOR MINIMAX VALUES
