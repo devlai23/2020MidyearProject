@@ -33,33 +33,33 @@ public class evaluationscore {
         evalScore -= whitekings;
     }
 
-    public void depth(){
-        int whitedepth = 0;
-        int reddepth = 0;
-        for (int i = 0; i < 8; i++){
-            for (int j = 0; j < 8; j++){
-                if (board[i][j] == 'W'){
-                    whitedepth += i;
-                }
-            }
-        }
+    // public void depth(){
+    //     int whitedepth = 0;
+    //     int reddepth = 0;
+    //     for (int i = 0; i < 8; i++){
+    //         for (int j = 0; j < 8; j++){
+    //             if (board[i][j] == 'W'){
+    //                 whitedepth += i;
+    //             }
+    //         }
+    //     }
 
-        for (int i = 7; i >= 0; i--){
-            for (int j = 0; j < 8; j++){
-                if (board[i][j] == 'R'){
-                    reddepth += 7-i;
-                }
-            }
-        }
+    //     for (int i = 7; i >= 0; i--){
+    //         for (int j = 0; j < 8; j++){
+    //             if (board[i][j] == 'R'){
+    //                 reddepth += 7-i;
+    //             }
+    //         }
+    //     }
 
-        double diff = reddepth - whitedepth;
-        evalScore += diff * 0.25;
-    }
+    //     double diff = reddepth - whitedepth;
+    //     evalScore += diff * 0.25;
+    // }
 
     public double ret(){
         colors();
         kings();
-        depth();
+        // depth();
         return evalScore;
     }
 }

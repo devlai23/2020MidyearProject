@@ -4,14 +4,14 @@ import java.util.*;
 
 public class Game {
     static char[][] board = {
-        {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
-        {'W', '\0', 'W', '\0', 'W', '\0', 'W', '\0'},
-        {'\0', 'W', '\0', 'W', '\0', 'W', '\0', 'W'},
-        {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
-        {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
-        {'R', '\0', 'R', '\0', 'R', '\0', 'R', '\0'},
-        {'\0', 'R', '\0', 'R', '\0', 'R', '\0', 'R'},
-        {'R', '\0', 'R', '\0', 'R', '\0', 'R', '\0'}
+        {' ', 'W', ' ', 'W', ' ', 'W', ' ', 'W'},
+        {'W', ' ', 'W', ' ', 'W', ' ', 'W', ' '},
+        {' ', 'W', ' ', 'W', ' ', 'W', ' ', 'W'},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+        {'R', ' ', 'R', ' ', 'R', ' ', 'R', ' '},
+        {' ', 'R', ' ', 'R', ' ', 'R', ' ', 'R'},
+        {'R', ' ', 'R', ' ', 'R', ' ', 'R', ' '}
     };
     static boolean[][] king = new boolean[8][8];
     static int[][] ref = {  
@@ -30,6 +30,7 @@ public class Game {
     static Scanner s = new Scanner(System.in);
     static int redkings = 0;
     static int whitekings = 0; 
+    static char[][] arraycopy = new char[board.length][board[0].length];
     
     public static void main(String[] args) {
         System.out.println("Welcome to CheckerBot");
@@ -39,8 +40,10 @@ public class Game {
             if (run){
                 printTurn();
                 printBoard();
+                Node choice = null;
+
                 if (turn == 'W'){
-                    createTree();
+                    Tree<Node> t = createTree();
                     ArrayList<int[]> totalValidMoves = new ArrayList<int[]>();
                     for (int i = 0; i < 8; i++){
                         for (int j = 0; j < 8; j++){
@@ -52,11 +55,65 @@ public class Game {
                             }
                         }
                     }
-                    for (int i = 0; i < totalValidMoves.size(); i++){
-                        System.out.println(Arrays.toString(totalValidMoves.get(i)));
+
+                    // for (int i = 0; i < totalValidMoves.size(); i++){
+                    //     System.out.println(Arrays.toString(totalValidMoves.get(i)));
+                    // }
+                    // prints all valid bot moves
+                    for (int i = 0; i < totalValidMoves.size(); i++){ //test all valid moves
+                        for (int j = 0; j < board.length; j++){
+                            for (int k = 0; k < board[j].length; k++){
+                                arraycopy[j][k] = board[j][k];
+                            }
+                        }
+                        int[] botinput = new int[3];
+                        botinput[0] = totalValidMoves.get(i)[0];
+                        botinput[1] = totalValidMoves.get(i)[1];
+                        botinput[2] = totalValidMoves.get(i)[2];
+                        
+                        botmove(botinput);
+                        // for (int j = 0; j < 8; j++){
+                        //     System.out.println(Arrays.toString(arraycopy[j]));
+                        // }
+                        // prints the simulated bot moves
+                        
+                        //note the score
+                        evaluationscore es = new evaluationscore(arraycopy, redkings, whitekings);
+                        double score = es.ret();
+                        // System.out.println(score);
+                        // System.out.println();
+                        // prints eval score of each simulated move
+                        t.root.addChild(score, botinput[0], botinput[1], botinput[2]); //MAKE IT EVALUATE FARTHER DOWN LATER
+
+                        //reset arraycopy for next time
+                        arraycopyclear();
                     }
+
+                    Collections.sort(t.root.children);
+                    // t.printTree();
+                    double baseval = t.root.children.get(0).value;
+
+                    for (int i = t.root.children.size()-1; i >= 0; i--){ //narrow down to optimal moves
+                        if (t.root.children.get(i).value > baseval){
+                            t.root.children.remove(i);
+                        }
+                    }
+                    Random r = new Random();
+                    choice = t.root.children.get(r.nextInt(t.root.children.size()));
                 }
-                newInput(); // later change so new input only occurs on player turn
+
+                if (turn == 'W'){
+                    int[] param = new int[2];
+                    param[0] = choice.i;
+                    param[1] = choice.j;
+                    int moveParam = reverseConvert(param);
+                    move(moveParam, choice.direction);
+                }
+                if (turn == 'R'){
+                    newInput();
+                }
+
+
                 if (turn == 'R')
                     turn = 'W';
                 else
@@ -128,7 +185,7 @@ public class Game {
         }
         char temp = board[currentPosConverted[0]][currentPosConverted[1]];
         boolean kingTemp = king[currentPosConverted[0]][currentPosConverted[1]];
-        board[currentPosConverted[0]][currentPosConverted[1]] = '\0';  // delete current position
+        board[currentPosConverted[0]][currentPosConverted[1]] = ' ';  // delete current position
         
         // check if row is even or odd & increment (move)
 
@@ -212,7 +269,7 @@ public class Game {
         int x = 0;
         int jumpdistance = 0;
         while(x < direction.size() && direction.get(x) == check){
-            if (x+1<direction.size() && direction.get(x+1) == '\0'){
+            if (x+1<direction.size() && direction.get(x+1) == ' '){
                 jumpdistance+=2;
             }
             else{
@@ -231,7 +288,7 @@ public class Game {
                 movePosConverted[1] = currentPosConverted[1] - jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = '\0';
+                    board[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = ' ';
                     counter += 2;
                 }
             }
@@ -240,7 +297,7 @@ public class Game {
                 movePosConverted[1] = currentPosConverted[1] + jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = '\0';
+                    board[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = ' ';
                     counter += 2;
                 }
             }
@@ -249,7 +306,7 @@ public class Game {
                 movePosConverted[1] = currentPosConverted[1] + jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = '\0';
+                    board[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = ' ';
                     counter += 2;
                 }
             }
@@ -258,7 +315,7 @@ public class Game {
                 movePosConverted[1] = currentPosConverted[1] - jumpdistance;
                 int counter = 1;
                 for (int i = 0; i < jumpdistance/2; i++){
-                    board[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = '\0';
+                    board[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = ' ';
                     counter += 2;
                 }
             }
@@ -295,6 +352,17 @@ public class Game {
         return ret;
     }
 
+    public static int reverseConvert(int[] currentPos){
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                if ((i == currentPos[0]) && (j == currentPos[1])){
+                    return ref[i][j];
+                }
+            }
+        }
+        return -1;
+    }
+
     public static void printBoard(){
         for (int i = 0; i < 8; i++){
             System.out.println(Arrays.toString(board[i]));
@@ -327,9 +395,10 @@ public class Game {
         }
     }
 
-    public static void createTree(){
+    public static Tree<Node> createTree(){
         Node root = new Node();
         tree = new Tree<>(root);
+        return tree;
     }
 
     public static void printTurn() {
@@ -348,8 +417,6 @@ public class Game {
     }
 
     public static ArrayList<int[]> validMoves(int i, int j){
-        System.out.println(i);
-        System.out.println(j + "\n");
         ArrayList<int[]> ret = new ArrayList<int[]>();
         int savei = i;
         int savej = j;
@@ -380,26 +447,23 @@ public class Game {
             int newj;
 
             if (a == 1){
-                newi = i--;
-                newj = j--;
+                newi = i-1;
+                newj = j-1;
             }
             else if (a == 2){
-                newi = i--;
-                newj = j++;
+                newi = i-1;
+                newj = j+1;
             }
             else if (a == 3){
-                newi = i++;
-                newj = j++;
+                newi = i+1;
+                newj = j+1;
             }
             else{
-                newi = i++;
-                newj = j--;
+                newi = i+1;
+                newj = j-1;
             }
             char movePiece = board[newi][newj];
             if (movePiece=='W') { // check if you will hit your own piece
-                if (savei == 2 && savej == 1){
-                    System.out.println("alalakfksdfksdfjds");
-                }
                 continue;
             }
 
@@ -440,18 +504,22 @@ public class Game {
                     }
                 }
             }
+            boolean flag = false;
             int x = 0;
             int jumpdistance = 0;
             while(x < direction.size() && direction.get(x) == 'R'){
-                if (x+1<direction.size() && direction.get(x+1) == '\0'){
+                if (x+1<direction.size() && direction.get(x+1) == ' '){
                     jumpdistance+=2;
                 }
                 else{
                     if (jumpdistance<2) {
-                        continue;
+                        flag = true;
                     }
                 }
                 x+=2;
+            }
+            if (flag){
+                continue;
             }
 
             int[] add = new int[3];
@@ -460,7 +528,139 @@ public class Game {
             add[2] = a;
             ret.add(add);
         }
-
         return ret;
+    }
+
+    public static void botmove(int[] currentPosConverted) {
+        int movePos = currentPosConverted[2];
+
+        int row = -1; // even or odd row
+        if (currentPosConverted[0] % 2 == 0) {
+            row = 2;
+        }
+        else if (currentPosConverted[0] % 2 == 1) {
+            row = 1;
+        }
+
+        char temp = arraycopy[currentPosConverted[0]][currentPosConverted[1]];
+        arraycopy[currentPosConverted[0]][currentPosConverted[1]] = ' ';  // delete current position
+        
+        // check if row is even or odd & increment (move)
+
+        int[] movePosConverted = new int[2];
+        if (movePos == 1){
+            movePosConverted[0] = currentPosConverted[0]-1;
+            movePosConverted[1] = currentPosConverted[1]-1;
+        }
+        else if (movePos == 2){
+            movePosConverted[0] = currentPosConverted[0]-1;
+            movePosConverted[1] = currentPosConverted[1]+1;
+        }
+        else if (movePos == 3){
+            movePosConverted[0] = currentPosConverted[0]+1;
+            movePosConverted[1] = currentPosConverted[1]+1;
+        }
+        else{
+            movePosConverted[0] = currentPosConverted[0]+1;
+            movePosConverted[1] = currentPosConverted[1]-1;
+        }
+
+        char check = 'R';
+        ArrayList<Character> direction = new ArrayList<>();
+
+        if (movePos == 2){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x >= 0; x--){
+                if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                    direction.add(arraycopy[x][y]); 
+                    y++;
+                }
+            }
+        }
+        else if (movePos == 1){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x >= 0; x--){
+                if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                    direction.add(arraycopy[x][y]); 
+                    y--;
+                }
+            }
+        }
+        else if (movePos == 3){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x <= 7; x++){
+                if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                    direction.add(arraycopy[x][y]); 
+                    y++;
+                }
+            }
+        }
+        else if (movePos == 4){
+            int y = movePosConverted[1];
+            for (int x = movePosConverted[0]; x <= 7; x++){
+                if (x >= 0 && y >= 0 && x < 8 && y < 8){
+                    direction.add(arraycopy[x][y]); 
+                    y--;
+                }
+            }
+        }
+        
+        int x = 0;
+        int jumpdistance = 0;
+        while(x < direction.size() && direction.get(x) == check){
+            if (x+1<direction.size() && direction.get(x+1) == ' '){
+                jumpdistance+=2;
+            }
+            x+=2;
+        }
+
+        if (jumpdistance > 0){
+            if (movePos == 1){
+                movePosConverted[0] = currentPosConverted[0] - jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] - jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    arraycopy[currentPosConverted[0] - counter][currentPosConverted[1] - counter] = ' ';
+                    counter += 2;
+                }
+            }
+            else if (movePos == 2){
+                movePosConverted[0] = currentPosConverted[0] - jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] + jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    arraycopy[currentPosConverted[0] - counter][currentPosConverted[1] + counter] = ' ';
+                    counter += 2;
+                }
+            }
+            else if (movePos == 3){
+                movePosConverted[0] = currentPosConverted[0] + jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] + jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    arraycopy[currentPosConverted[0] + counter][currentPosConverted[1] + counter] = ' ';
+                    counter += 2;
+                }
+            }
+            else if (movePos == 4){
+                movePosConverted[0] = currentPosConverted[0] + jumpdistance;
+                movePosConverted[1] = currentPosConverted[1] - jumpdistance;
+                int counter = 1;
+                for (int i = 0; i < jumpdistance/2; i++){
+                    arraycopy[currentPosConverted[0] + counter][currentPosConverted[1] - counter] = ' ';
+                    counter += 2;
+                }
+            }
+        }
+
+        arraycopy[movePosConverted[0]][movePosConverted[1]] = temp;
+    }
+
+    public static void arraycopyclear(){
+        for (int i = 0; i < arraycopy.length; i++){
+            for (int j = 0; j < arraycopy[i].length; j++){
+                arraycopy[i][j] = '\0';
+            }
+        }
     }
 }
