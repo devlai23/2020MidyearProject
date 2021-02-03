@@ -411,9 +411,16 @@ public class Game {
     }
 
     public static void newInput() {
-        String str = s.nextLine();
-        String[] splitted = str.split(" ");
-        move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
+        try{
+            String str = s.nextLine();
+            String[] splitted = str.split(" ");
+            move(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
+        }
+        catch (NumberFormatException e){
+            System.out.println(e);
+            System.out.println("Please enter a valid input.");
+            newInput();
+        }
     }
 
     public static ArrayList<int[]> validMoves(int i, int j){
